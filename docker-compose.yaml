@@ -1,0 +1,14 @@
+services:
+  network-online:
+      image: busybox
+      restart: on-failure
+      command: sh -c "until ping -c1 8.8.8.8 >/dev/null 2>&1; do sleep 1; done"
+
+  ipinfo:
+    build: .
+    restart: on-failure
+    depends_on:
+      - network-online
+    environment:
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+    network_mode: "host"
